@@ -6,16 +6,18 @@ After clicking "Deploy to Cloudflare", verify both workers are deployed correctl
 
 You should have **TWO workers** deployed:
 
-1. **mcp-demo-app** - Dashboard UI
-2. **mcp-server** - MCP Tools
+1. **REPO-NAME-dashboard** - Dashboard UI (e.g., `mcp-lab-workshop2-dashboard`)
+2. **REPO-NAME-mcp** - MCP Tools (e.g., `mcp-lab-workshop2-mcp`)
 
 Go to: https://dash.cloudflare.com/ → Workers & Pages
 
-You should see both workers listed.
+You should see both workers listed with `-dashboard` and `-mcp` suffixes.
 
-## ✅ Step 2: Verify Dashboard (mcp-demo-app)
+## ✅ Step 2: Verify Dashboard (REPO-NAME-dashboard)
 
-Visit: `https://mcp-demo-app.YOUR-SUBDOMAIN.workers.dev`
+Visit: `https://REPO-NAME-dashboard.YOUR-SUBDOMAIN.workers.dev`
+
+(Replace REPO-NAME with your actual repo name, e.g., `mcp-lab-workshop2-dashboard`)
 
 **Expected**: You should see a **dark-themed monitoring dashboard** with:
 - Navigation sidebar (Overview, Logs, Settings)
@@ -25,9 +27,11 @@ Visit: `https://mcp-demo-app.YOUR-SUBDOMAIN.workers.dev`
 
 **Wrong**: If you see an "MCP Server" page with connection instructions, the wrong code was deployed.
 
-## ✅ Step 3: Verify MCP Server (mcp-server)
+## ✅ Step 3: Verify MCP Server (REPO-NAME-mcp)
 
-Visit: `https://mcp-server.YOUR-SUBDOMAIN.workers.dev`
+Visit: `https://REPO-NAME-mcp.YOUR-SUBDOMAIN.workers.dev`
+
+(Replace REPO-NAME with your actual repo name, e.g., `mcp-lab-workshop2-mcp`)
 
 **Expected**: You should see an **MCP Server info page** with:
 - "MCP Server" title with green "Active" badge
@@ -39,14 +43,14 @@ Visit: `https://mcp-server.YOUR-SUBDOMAIN.workers.dev`
 
 On the MCP Server page, click "View Live Dashboard"
 
-**Expected**: Opens your dashboard at `https://mcp-demo-app.YOUR-SUBDOMAIN.workers.dev`
+**Expected**: Opens your dashboard at `https://REPO-NAME-dashboard.YOUR-SUBDOMAIN.workers.dev`
 
-The URLs should match your subdomain (NOT matthew-4b1.workers.dev).
+The URLs should match your subdomain and repo name (e.g., `mcp-lab-workshop2-dashboard.joey-abc.workers.dev`).
 
 ## ✅ Step 5: Test MCP Connection
 
 1. Open Cloudflare AI Playground
-2. Add MCP server: `https://mcp-server.YOUR-SUBDOMAIN.workers.dev/mcp`
+2. Add MCP server: `https://REPO-NAME-mcp.YOUR-SUBDOMAIN.workers.dev/mcp`
 3. You should see 6 tools available
 4. Call `get_state` tool
 5. Should return dashboard state with stats

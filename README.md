@@ -88,8 +88,10 @@ This will deploy:
 
 Once deployed, you'll get two URLs:
 
-- **Dashboard**: `https://mcp-demo-app.YOUR-SUBDOMAIN.workers.dev`
-- **MCP Server**: `https://mcp-server.YOUR-SUBDOMAIN.workers.dev`
+- **Dashboard**: `https://REPO-NAME-dashboard.YOUR-SUBDOMAIN.workers.dev`
+- **MCP Server**: `https://REPO-NAME-mcp.YOUR-SUBDOMAIN.workers.dev`
+
+> Replace `REPO-NAME` with your actual repo name (e.g., if your repo is `mcp-lab-workshop2`, your URLs will be `mcp-lab-workshop2-dashboard` and `mcp-lab-workshop2-mcp`)
 
 ### Connect to MCP Server
 
@@ -99,7 +101,7 @@ Add the MCP server to your OpenCode or MCP client:
 {
   "mcpServers": {
     "demo": {
-      "url": "https://mcp-server.YOUR-SUBDOMAIN.workers.dev"
+      "url": "https://REPO-NAME-mcp.YOUR-SUBDOMAIN.workers.dev"
     }
   }
 }
