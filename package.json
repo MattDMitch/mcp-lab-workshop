@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "echo 'Build complete'",
-    "deploy": "npx wrangler deploy demo-app/index.js --name mcp-demo-app && npx wrangler deploy mcp-server/index.js --name mcp-server"
+    "deploy": "cd demo-app && npx wrangler deploy && cd ../mcp-server && npx wrangler deploy"
   },
   "devDependencies": {
     "wrangler": "^3.0.0"
