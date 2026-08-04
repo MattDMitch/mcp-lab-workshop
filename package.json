@@ -11,9 +11,9 @@
     "wrangler": "^3.0.0"
   },
   "cloudflare": {
-    "bindings": {
+    "kv_namespaces": {
       "DEMO_STATE": {
-        "description": "KV namespace for storing demo application state. This will be automatically provisioned during deployment."
+        "binding": "DEMO_STATE"
       }
     }
   },
