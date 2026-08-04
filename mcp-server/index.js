@@ -37,7 +37,7 @@ export default {
     }
 
     if (url.pathname === '/' || url.pathname === '/info') {
-      return new Response(getInfoHTML(), {
+      return new Response(getInfoHTML(request), {
         headers: { 'Content-Type': 'text/html' },
       });
     }
@@ -407,7 +407,11 @@ function jsonResponse(data, corsHeaders, status = 200) {
   });
 }
 
-function getInfoHTML() {
+function getInfoHTML(request) {
+  const url = new URL(request.url);
+  const mcpServerUrl = url.origin;
+  const dashboardUrl = mcpServerUrl.replace('mcp-server', 'mcp-demo-app');
+  
   return `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"><title>MCP Server</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -416,12 +420,12 @@ function getInfoHTML() {
 <h1>MCP Server</h1><div class="badge">Active</div>
 <p>Production monitoring dashboard control via MCP</p>
 <h2>Cloudflare AI Playground</h2>
-<pre>https://mcp-server.matthew-4b1.workers.dev/mcp</pre>
+<pre>${mcpServerUrl}/mcp</pre>
 <h2>Dashboard</h2>
-<p><a href="https://mcp-demo-app.matthew-4b1.workers.dev" target="_blank">View Live Dashboard</a></p>
+<p><a href="${dashboardUrl}" target="_blank">View Live Dashboard</a></p>
 <p style="color:#A1A1AA;margin-top:.5rem">Open dashboard, then use MCP tools to control it in real-time</p>
 <h2>Quick Test</h2>
-<pre>curl -X POST https://mcp-server.matthew-4b1.workers.dev/mcp/tools/call \\
+<pre>curl -X POST ${mcpServerUrl}/mcp/tools/call \\
   -H "Content-Type: application/json" \\
   -d '{"tool":"simulate_traffic","arguments":{"amount":"high"}}'</pre>
 </div></body></html>`;
