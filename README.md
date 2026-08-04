@@ -54,8 +54,10 @@ Click the button above to deploy to your Cloudflare account:
 The deploy process will:
 1. ✅ Clone the repo to your GitHub
 2. ✅ Create a KV namespace automatically
-3. ✅ Deploy both workers to Cloudflare
+3. ✅ Deploy **TWO workers**: `mcp-demo-app` (dashboard) and `mcp-server` (MCP tools)
 4. ✅ Give you live URLs instantly
+
+> **Important**: The deployment creates **two separate workers**. Make sure both are deployed successfully!
 
 ### Manual Deploy
 
@@ -66,12 +68,19 @@ If you prefer to deploy manually:
 git clone https://github.com/MattDMitch/mcp-lab-workshop.git
 cd mcp-lab-workshop
 
-# Login to Cloudflare
-wrangler login
+# Install dependencies
+npm install
 
-# Deploy (KV namespace will be created automatically)
-wrangler deploy
+# Login to Cloudflare
+npx wrangler login
+
+# Run deploy script (creates KV namespace and deploys both workers)
+npm run deploy
 ```
+
+This will deploy:
+- ✅ `mcp-demo-app` - The monitoring dashboard UI
+- ✅ `mcp-server` - The MCP tools server
 
 ---
 

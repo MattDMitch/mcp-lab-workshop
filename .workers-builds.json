@@ -1,0 +1,12 @@
+{
+  "workers": [
+    {
+      "name": "mcp-demo-app",
+      "directory": "demo-app"
+    },
+    {
+      "name": "mcp-server",
+      "directory": "mcp-server"
+    }
+  ]
+}
