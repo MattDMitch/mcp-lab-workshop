@@ -1,23 +1,20 @@
 /**
- * MCP Demo App - Interactive Dark Dashboard
- * A fun, reactive dashboard that responds to MCP server commands
+ * MCP Demo App - Professional Dashboard
+ * A professional, reactive dashboard controlled by MCP server
  */
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // Handle SSE endpoint for real-time updates
     if (url.pathname === '/events') {
       return handleSSE(request, env);
     }
 
-    // API endpoints
     if (url.pathname.startsWith('/api/')) {
       return handleAPI(request, env, url);
     }
 
-    // Serve the main dashboard
     if (url.pathname === '/' || url.pathname === '/index.html') {
       return new Response(getHTML(), {
         headers: { 'Content-Type': 'text/html' },
@@ -28,16 +25,13 @@ export default {
   },
 };
 
-// Server-Sent Events for real-time updates
 async function handleSSE(request, env) {
   const { readable, writable } = new TransformStream();
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
 
-  // Send initial connection message
   await writer.write(encoder.encode('data: {"type":"connected"}\n\n'));
 
-  // Poll KV for changes every 2 seconds
   const intervalId = setInterval(async () => {
     try {
       const state = await env.DEMO_STATE.get('appState', 'json');
@@ -49,7 +43,6 @@ async function handleSSE(request, env) {
     }
   }, 2000);
 
-  // Cleanup after 60 seconds
   setTimeout(() => {
     clearInterval(intervalId);
     writer.close();
@@ -65,7 +58,6 @@ async function handleSSE(request, env) {
   });
 }
 
-// API handlers
 async function handleAPI(request, env, url) {
   const path = url.pathname;
 
@@ -82,7 +74,6 @@ async function handleAPI(request, env, url) {
   return new Response('Not Found', { status: 404 });
 }
 
-// Get or initialize app state
 async function getState(env) {
   let state = await env.DEMO_STATE.get('appState', 'json');
   
@@ -101,7 +92,7 @@ async function getState(env) {
         uptime: 99.9,
         responseTime: 23,
       },
-      message: 'Welcome to the MCP Lab! 🚀',
+      message: 'Application running normally',
       lastUpdate: new Date().toISOString(),
     };
     await env.DEMO_STATE.put('appState', JSON.stringify(state));
@@ -125,7 +116,10 @@ function getHTML() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MCP Lab - Demo Dashboard</title>
+  <title>MCP Demo Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -134,491 +128,431 @@ function getHTML() {
     }
 
     :root {
-      --cf-orange: #F48120;
-      --cf-orange-bright: #FF8C00;
-      --bg-primary: #0A0A0A;
-      --bg-secondary: #141414;
-      --bg-tertiary: #1E1E1E;
-      --text-primary: #FFFFFF;
-      --text-secondary: #A0A0A0;
-      --border: #2A2A2A;
-      --glow: rgba(244, 129, 32, 0.3);
+      --orange-primary: #F48120;
+      --orange-hover: #FF8C00;
+      --bg-dark: #0C0D0E;
+      --bg-darker: #000000;
+      --bg-card: #18181A;
+      --bg-hover: #27272A;
+      --text-primary: #FAFAFA;
+      --text-secondary: #A1A1AA;
+      --text-muted: #71717A;
+      --border: #27272A;
+      --border-hover: #3F3F46;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
-      background: var(--bg-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
       color: var(--text-primary);
       line-height: 1.6;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .nav {
+      background: var(--bg-darker);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .logo-accent {
+      color: var(--orange-primary);
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      animation: pulse-status 2s infinite;
+    }
+
+    @keyframes pulse-status {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 2rem;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 3rem;
       padding: 3rem 2rem;
-      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      position: relative;
-      overflow: hidden;
     }
 
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--cf-orange) 0%, var(--cf-orange-bright) 100%);
+    .page-header {
+      margin-bottom: 2.5rem;
     }
 
-    h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
       margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--cf-orange) 0%, var(--cf-orange-bright) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: slideDown 0.6s ease;
+      letter-spacing: -0.02em;
     }
 
-    .subtitle {
-      font-size: 1.3rem;
+    .page-subtitle {
+      font-size: 1rem;
       color: var(--text-secondary);
-      margin-bottom: 1rem;
     }
 
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      padding: 0.75rem 1.5rem;
-      background: rgba(244, 129, 32, 0.1);
-      border: 1px solid var(--cf-orange);
-      border-radius: 50px;
-      color: var(--cf-orange);
-      font-weight: 600;
-      font-size: 0.9rem;
+    .banner {
+      background: linear-gradient(135deg, #3730A3 0%, #7C3AED 100%);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      font-weight: 500;
     }
 
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--cf-orange);
-      border-radius: 50%;
-      animation: pulse 2s infinite;
+    .banner-text {
+      color: white;
     }
 
-    .stats-grid {
+    .metrics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin-bottom: 2rem;
     }
 
-    .stat-card {
-      background: var(--bg-secondary);
+    .metric-card {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.2s;
     }
 
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--cf-orange), var(--cf-orange-bright));
+    .metric-card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-hover);
     }
 
-    .stat-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--cf-orange);
-      box-shadow: 0 10px 40px var(--glow);
-    }
-
-    .stat-icon {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
+    .metric-label {
+      font-size: 0.875rem;
       color: var(--text-secondary);
+      font-weight: 500;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 0.05em;
       margin-bottom: 0.75rem;
-      font-weight: 600;
     }
 
-    .stat-value {
-      font-size: 3rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--cf-orange) 0%, var(--cf-orange-bright) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: countUp 1s ease;
+    .metric-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
     }
 
-    .message-banner {
-      background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
-      color: white;
-      padding: 2rem;
-      border-radius: 16px;
-      margin-bottom: 2rem;
-      text-align: center;
-      font-size: 1.3rem;
-      font-weight: 600;
-      box-shadow: 0 10px 40px rgba(139, 92, 246, 0.3);
-      animation: pulse 3s infinite;
+    .metric-unit {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-muted);
     }
 
-    .features-section {
-      background: var(--bg-secondary);
+    .section {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2.5rem;
+      border-radius: 12px;
+      padding: 2rem;
       margin-bottom: 2rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
     }
 
     .section-title {
-      font-size: 1.75rem;
-      margin-bottom: 2rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      color: var(--text-primary);
+      font-size: 1.25rem;
+      font-weight: 600;
     }
 
     .feature-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
     }
 
     .feature-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1.5rem;
-      background: var(--bg-tertiary);
-      border-radius: 12px;
+      padding: 1rem;
+      background: var(--bg-dark);
       border: 1px solid var(--border);
-      transition: all 0.3s;
+      border-radius: 8px;
+      transition: all 0.2s;
     }
 
     .feature-item:hover {
-      border-color: var(--cf-orange);
-      box-shadow: 0 5px 20px var(--glow);
+      border-color: var(--border-hover);
     }
 
-    .feature-info {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+    .feature-label {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--text-primary);
     }
 
-    .feature-icon {
-      font-size: 1.5rem;
-    }
-
-    .feature-toggle {
-      width: 56px;
-      height: 30px;
-      background: #3A3A3A;
-      border-radius: 50px;
+    .toggle {
       position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--border);
+      border-radius: 12px;
       cursor: pointer;
-      transition: background 0.3s;
-      flex-shrink: 0;
+      transition: background 0.2s;
     }
 
-    .feature-toggle.active {
-      background: var(--cf-orange);
-      box-shadow: 0 0 20px var(--glow);
+    .toggle.active {
+      background: var(--orange-primary);
     }
 
-    .feature-toggle::after {
+    .toggle::after {
       content: '';
       position: absolute;
-      width: 24px;
-      height: 24px;
+      width: 18px;
+      height: 18px;
       background: white;
       border-radius: 50%;
       top: 3px;
       left: 3px;
-      transition: left 0.3s;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: left 0.2s;
     }
 
-    .feature-toggle.active::after {
-      left: 29px;
+    .toggle.active::after {
+      left: 23px;
     }
 
-    .activity-feed {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2.5rem;
-      max-height: 500px;
+    .activity-list {
+      max-height: 400px;
       overflow-y: auto;
     }
 
-    .activity-feed::-webkit-scrollbar {
-      width: 8px;
+    .activity-list::-webkit-scrollbar {
+      width: 6px;
     }
 
-    .activity-feed::-webkit-scrollbar-track {
-      background: var(--bg-tertiary);
-      border-radius: 4px;
+    .activity-list::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+      border-radius: 3px;
     }
 
-    .activity-feed::-webkit-scrollbar-thumb {
-      background: var(--cf-orange);
-      border-radius: 4px;
+    .activity-list::-webkit-scrollbar-thumb {
+      background: var(--border-hover);
+      border-radius: 3px;
     }
 
     .activity-item {
-      padding: 1.25rem;
-      border-left: 3px solid var(--cf-orange);
-      margin-bottom: 1rem;
-      background: var(--bg-tertiary);
-      border-radius: 0 8px 8px 0;
-      animation: slideIn 0.3s ease;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
     }
 
-    .activity-content {
+    .activity-item:last-child {
+      border-bottom: none;
+    }
+
+    .activity-info {
       flex: 1;
     }
 
+    .activity-action {
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
     .activity-time {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      margin-top: 0.25rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
     }
 
-    .mcp-badge {
-      display: inline-block;
-      background: var(--cf-orange);
-      color: white;
-      padding: 0.35rem 0.85rem;
-      border-radius: 50px;
+    .activity-badge {
       font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
+      font-weight: 600;
+      padding: 0.25rem 0.75rem;
+      background: rgba(244, 129, 32, 0.1);
+      color: var(--orange-primary);
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .connection-status {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.5rem;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      z-index: 1000;
-    }
-
-    .status-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #10B981;
-      animation: blink 2s infinite;
-      box-shadow: 0 0 10px #10B981;
-    }
-
-    footer {
-      text-align: center;
-      padding: 3rem 2rem;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
+    .footer {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
       border-top: 1px solid var(--border);
-      margin-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
     }
 
-    footer a {
-      color: var(--cf-orange);
+    .footer-link {
+      color: var(--orange-primary);
       text-decoration: none;
     }
 
-    footer a:hover {
+    .footer-link:hover {
       text-decoration: underline;
     }
 
-    @keyframes slideDown {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(-20px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    @keyframes countUp {
-      from { opacity: 0; transform: scale(0.5); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
     @media (max-width: 768px) {
-      h1 { font-size: 2.5rem; }
-      .container { padding: 1rem; }
-      .stats-grid { grid-template-columns: 1fr; }
+      .container {
+        padding: 2rem 1rem;
+      }
+      
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
+  <nav class="nav">
+    <div class="nav-content">
+      <div class="logo">MCP <span class="logo-accent">Demo</span></div>
+      <div class="status-indicator">
+        <div class="status-dot"></div>
+        <span>Connected</span>
+      </div>
+    </div>
+  </nav>
+
   <div class="container">
-    <header>
-      <h1>🚀 MCP Lab Dashboard</h1>
-      <p class="subtitle">Control this app via MCP Server • Real-time updates</p>
-      <div class="status-badge">
-        <div class="pulse-dot"></div>
-        <span>Live Demo</span>
-      </div>
-    </header>
-
-    <div class="message-banner" id="messageBanner">
-      <span id="message">Welcome to the MCP Lab! 🚀</span>
+    <div class="page-header">
+      <h1 class="page-title">Dashboard Overview</h1>
+      <p class="page-subtitle">Real-time application monitoring and control via MCP</p>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">👥</div>
-        <div class="stat-label">Visitors</div>
-        <div class="stat-value" id="visitors">0</div>
+    <div class="banner">
+      <div class="banner-text" id="message">Application running normally</div>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total Visitors</div>
+        <div class="metric-value" id="visitors">0</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon">⚡</div>
-        <div class="stat-label">Requests</div>
-        <div class="stat-value" id="requests">0</div>
+      <div class="metric-card">
+        <div class="metric-label">Total Requests</div>
+        <div class="metric-value" id="requests">0</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon">📊</div>
-        <div class="stat-label">Uptime</div>
-        <div class="stat-value" id="uptime">0%</div>
+      <div class="metric-card">
+        <div class="metric-label">System Uptime</div>
+        <div class="metric-value">
+          <span id="uptime">0</span><span class="metric-unit">%</span>
+        </div>
       </div>
-      <div class="stat-card">
-        <div class="stat-icon">⏱️</div>
-        <div class="stat-label">Response</div>
-        <div class="stat-value" id="responseTime">0<span style="font-size:1rem">ms</span></div>
+      <div class="metric-card">
+        <div class="metric-label">Response Time</div>
+        <div class="metric-value">
+          <span id="responseTime">0</span><span class="metric-unit">ms</span>
+        </div>
       </div>
     </div>
 
-    <div class="features-section">
-      <h2 class="section-title">🎛️ Feature Toggles</h2>
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Feature Configuration</h2>
+      </div>
       <div class="feature-grid">
         <div class="feature-item">
-          <div class="feature-info">
-            <div class="feature-icon">📊</div>
-            <span>Analytics</span>
-          </div>
-          <div class="feature-toggle" id="toggle-analytics"></div>
+          <span class="feature-label">Analytics</span>
+          <div class="toggle" id="toggle-analytics"></div>
         </div>
         <div class="feature-item">
-          <div class="feature-info">
-            <div class="feature-icon">🔔</div>
-            <span>Notifications</span>
-          </div>
-          <div class="feature-toggle" id="toggle-notifications"></div>
+          <span class="feature-label">Notifications</span>
+          <div class="toggle" id="toggle-notifications"></div>
         </div>
         <div class="feature-item">
-          <div class="feature-info">
-            <div class="feature-icon">🌙</div>
-            <span>Dark Mode</span>
-          </div>
-          <div class="feature-toggle" id="toggle-darkMode"></div>
+          <span class="feature-label">Dark Mode</span>
+          <div class="toggle" id="toggle-darkMode"></div>
         </div>
         <div class="feature-item">
-          <div class="feature-info">
-            <div class="feature-icon">✨</div>
-            <span>Animations</span>
-          </div>
-          <div class="feature-toggle" id="toggle-animations"></div>
+          <span class="feature-label">Animations</span>
+          <div class="toggle" id="toggle-animations"></div>
         </div>
       </div>
     </div>
 
-    <div class="activity-feed">
-      <h2 class="section-title">📡 Activity Feed</h2>
-      <div id="activityFeed">
+    <div class="section">
+      <div class="section-header">
+        <h2 class="section-title">Activity Log</h2>
+      </div>
+      <div class="activity-list" id="activityFeed">
         <div class="activity-item">
-          <div class="activity-content">
-            <div>App initialized</div>
+          <div class="activity-info">
+            <div class="activity-action">Application initialized</div>
             <div class="activity-time">Just now</div>
           </div>
-          <span class="mcp-badge">SYSTEM</span>
+          <div class="activity-badge">System</div>
         </div>
       </div>
     </div>
-
-    <div class="connection-status">
-      <div class="status-dot"></div>
-      <span>Connected to MCP</span>
-    </div>
-
-    <footer>
-      <p><strong>🔧 Control this dashboard using the MCP Server</strong></p>
-      <p style="margin-top: 0.5rem;">Built for Cloudflare SE Intern Workshop</p>
-      <p style="margin-top: 1rem; font-size: 0.85rem;">⚡ Powered by <a href="https://workers.cloudflare.com" target="_blank">Cloudflare Workers</a></p>
-    </footer>
   </div>
+
+  <footer class="footer">
+    <p>Controlled via MCP Server • Built for Cloudflare SE Workshop</p>
+    <p style="margin-top: 0.5rem;">
+      Powered by <a href="https://workers.cloudflare.com" class="footer-link" target="_blank">Cloudflare Workers</a>
+    </p>
+  </footer>
 
   <script>
     let currentState = null;
 
-    // Connect to SSE for real-time updates
     const eventSource = new EventSource('/events');
     
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'connected') {
-        console.log('✅ Connected to SSE');
         loadInitialState();
       } else {
         updateUI(data);
       }
     };
 
-    eventSource.onerror = () => {
-      console.error('❌ SSE connection error');
-    };
-
-    // Load initial state
     async function loadInitialState() {
       try {
         const response = await fetch('/api/state');
@@ -629,21 +563,16 @@ function getHTML() {
       }
     }
 
-    // Update UI with new state
     function updateUI(state) {
       if (!state) return;
       currentState = state;
 
-      // Update stats with animation
       document.getElementById('visitors').textContent = state.stats.visitors.toLocaleString();
       document.getElementById('requests').textContent = state.stats.requests.toLocaleString();
-      document.getElementById('uptime').textContent = state.stats.uptime + '%';
-      document.getElementById('responseTime').innerHTML = state.stats.responseTime + '<span style="font-size:1rem">ms</span>';
-
-      // Update message
+      document.getElementById('uptime').textContent = state.stats.uptime;
+      document.getElementById('responseTime').textContent = state.stats.responseTime;
       document.getElementById('message').textContent = state.message;
 
-      // Update features
       Object.keys(state.features).forEach(feature => {
         const toggle = document.getElementById('toggle-' + feature);
         if (toggle) {
@@ -656,10 +585,8 @@ function getHTML() {
       });
     }
 
-    // Load initial state on page load
     loadInitialState();
     
-    // Poll for activity feed updates
     setInterval(async () => {
       try {
         const response = await fetch('/api/activity');
@@ -676,11 +603,11 @@ function getHTML() {
       
       feed.innerHTML = activities.slice(-10).reverse().map(activity => \`
         <div class="activity-item">
-          <div class="activity-content">
-            <div>\${activity.action}</div>
+          <div class="activity-info">
+            <div class="activity-action">\${activity.action}</div>
             <div class="activity-time">\${new Date(activity.timestamp).toLocaleTimeString()}</div>
           </div>
-          <span class="mcp-badge">MCP</span>
+          <div class="activity-badge">MCP</div>
         </div>
       \`).join('');
     }
