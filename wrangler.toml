@@ -1,0 +1,7 @@
+name = "mcp-demo-app"
+main = "demo-app/index.js"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "DEMO_STATE"
+id = "placeholder"
