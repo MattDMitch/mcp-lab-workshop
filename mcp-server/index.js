@@ -409,8 +409,8 @@ function jsonResponse(data, corsHeaders, status = 200) {
 
 function getInfoHTML(request) {
   const url = new URL(request.url);
-  const mcpServerUrl = url.origin;
-  const dashboardUrl = mcpServerUrl.replace('mcp-server', 'mcp-demo-app');
+  const mcpServerUrl = url.origin + '/mcp';
+  const dashboardUrl = url.origin; // Dashboard at root path
   
   return `<!DOCTYPE html>
 <html><head><meta charset="UTF-8"><title>MCP Server</title>

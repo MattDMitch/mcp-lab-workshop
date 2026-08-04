@@ -5,9 +5,8 @@
   "private": true,
   "scripts": {
     "build": "echo 'Build step - no build needed for Workers'",
-    "deploy": "bash deploy.sh",
-    "deploy:demo": "cd demo-app && wrangler deploy",
-    "deploy:mcp": "cd mcp-server && wrangler deploy"
+    "deploy": "wrangler deploy",
+    "deploy:separate": "bash deploy.sh"
   },
   "devDependencies": {
     "wrangler": "^3.0.0"

@@ -86,12 +86,12 @@ This will deploy:
 
 ## 🎮 Using the MCP Server
 
-Once deployed, you'll get two URLs:
+Once deployed, you'll get ONE worker with multiple endpoints:
 
-- **Dashboard**: `https://REPO-NAME-dashboard.YOUR-SUBDOMAIN.workers.dev`
-- **MCP Server**: `https://REPO-NAME-mcp.YOUR-SUBDOMAIN.workers.dev`
+- **Dashboard**: `https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev/`
+- **MCP Server**: `https://YOUR-WORKER-NAME.YOUR-SUBDOMAIN.workers.dev/mcp`
 
-> Replace `REPO-NAME` with your actual repo name (e.g., if your repo is `mcp-lab-workshop2`, your URLs will be `mcp-lab-workshop2-dashboard` and `mcp-lab-workshop2-mcp`)
+> Both the dashboard and MCP server run in the same worker using path-based routing
 
 ### Connect to MCP Server
 
