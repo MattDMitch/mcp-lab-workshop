@@ -1,0 +1,19 @@
+package-lock.json
+  s_b1ad35abbf827a::t_f2afbced30bc97 1-1620
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c50fd34015212159b3f01dc49271e95b2fd7d378",
+  "prompts": {},
+  "sessions": {
+    "s_b1ad35abbf827a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0328ac803ffetjfOz820VcmmER",
+        "model": "claude-sonnet-4-5"
+      },
+      "human_author": "mattdmitch <matthew@theaardvark.com>"
+    }
+  }
+}
