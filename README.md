@@ -49,7 +49,7 @@ An **interactive workshop** for SE interns to learn about **Model Context Protoc
 
 Click the button above to deploy to your Cloudflare account:
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/YOUR-USERNAME/mcp-lab-workshop)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/MattDMitch/mcp-lab-workshop)
 
 The deploy process will:
 1. ✅ Clone the repo to your GitHub
@@ -63,7 +63,7 @@ If you prefer to deploy manually:
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR-USERNAME/mcp-lab-workshop.git
+git clone https://github.com/MattDMitch/mcp-lab-workshop.git
 cd mcp-lab-workshop
 
 # Login to Cloudflare
@@ -297,6 +297,6 @@ Made with ❤️ and ☕
 
 **Ready to learn MCP?**
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/YOUR-USERNAME/mcp-lab-workshop)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/MattDMitch/mcp-lab-workshop)
 
 </div>
