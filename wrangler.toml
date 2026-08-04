@@ -1,2 +1,10 @@
-# This file is not used - each worker has its own wrangler.toml
-# Workers are deployed via deploy.sh script
+# Deploy to Cloudflare will deploy this worker first
+# Then run: npm run deploy:demo to deploy the dashboard
+
+name = "mcp-server"
+main = "mcp-server/index.js"
+compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "DEMO_STATE"
+id = "placeholder"

@@ -35,27 +35,38 @@ sed -i.bak "s/# ID will be auto-provisioned by Workers Builds/id = \"$KV_ID\"/" 
 rm -f mcp-server/wrangler.toml.bak
 echo "✅ mcp-server configured"
 
-# Deploy demo-app
+# Get the base name from current directory or use fallback
+BASE_NAME="${PWD##*/}"
+if [ -z "$BASE_NAME" ] || [ "$BASE_NAME" = "mcp-lab-complete" ]; then
+  BASE_NAME="mcp-lab-workshop"
+fi
+
+echo "📝 Base name detected: $BASE_NAME"
+
+# Deploy demo-app with explicit name
 echo ""
 echo "Step 4: Deploying demo-app (Dashboard)..."
-cd demo-app && npx wrangler deploy
+cd demo-app && npx wrangler deploy --name "${BASE_NAME}-dashboard"
 cd ..
-echo "✅ demo-app deployed"
+echo "✅ demo-app deployed as: ${BASE_NAME}-dashboard"
 
-# Deploy mcp-server
+# Deploy mcp-server with explicit name
 echo ""
 echo "Step 5: Deploying mcp-server (MCP Tools)..."
-cd mcp-server && npx wrangler deploy
+cd mcp-server && npx wrangler deploy --name "${BASE_NAME}-mcp"
 cd ..
-echo "✅ mcp-server deployed"
+echo "✅ mcp-server deployed as: ${BASE_NAME}-mcp"
 
 echo ""
 echo "================================================"
 echo "✅ Deployment Complete!"
 echo "================================================"
 echo ""
-echo "🎯 Dashboard: https://mcp-demo-app.YOUR-SUBDOMAIN.workers.dev"
-echo "🔧 MCP Server: https://mcp-server.YOUR-SUBDOMAIN.workers.dev/mcp"
+echo "🎯 Dashboard: https://${BASE_NAME}-dashboard.YOUR-SUBDOMAIN.workers.dev"
+echo "🔧 MCP Server: https://${BASE_NAME}-mcp.YOUR-SUBDOMAIN.workers.dev/mcp"
+echo ""
+echo "📋 Your actual URLs (check Wrangler output above):"
+echo "   Look for lines like: https://WORKER-NAME.your-subdomain.workers.dev"
 echo ""
 echo "Next steps:"
 echo "1. Open the Dashboard URL to see the live monitoring UI"
