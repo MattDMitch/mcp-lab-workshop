@@ -1,0 +1,19 @@
+mcp-server/index.js
+  s_b1ad35abbf827a::t_a359d868c691e8 1-491
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "fcc0ba6bc5981862f4ac07f0b24b332a6bb89da9",
+  "prompts": {},
+  "sessions": {
+    "s_b1ad35abbf827a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0328ac803ffetjfOz820VcmmER",
+        "model": "claude-sonnet-4-5"
+      },
+      "human_author": "mattdmitch <matthew@theaardvark.com>"
+    }
+  }
+}
