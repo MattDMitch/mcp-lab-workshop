@@ -1,0 +1,19 @@
+deploy.sh
+  s_b1ad35abbf827a::t_910ce162ff2ccb 1-34
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "60b4b26a4863b3d954fd76be7626eb7d1e518581",
+  "prompts": {},
+  "sessions": {
+    "s_b1ad35abbf827a": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "ses_0328ac803ffetjfOz820VcmmER",
+        "model": "claude-sonnet-4-5"
+      },
+      "human_author": "mattdmitch <matthew@theaardvark.com>"
+    }
+  }
+}
